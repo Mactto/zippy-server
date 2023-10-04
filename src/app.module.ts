@@ -7,6 +7,7 @@ import { AccountModule } from './account/account.module';
 import { AuthModule } from './auth/auth.module';
 import { AlbumModule } from './album/album.module';
 import { PhotoModule } from './photo/photo.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { PhotoModule } from './photo/photo.module';
     AuthModule,
     AlbumModule,
     PhotoModule,
+    AwsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

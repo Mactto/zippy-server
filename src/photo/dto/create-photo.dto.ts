@@ -1,8 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { ArrayMinSize, IsArray, IsString } from 'class-validator';
 
 export class CreatePhotoDto {
   @ApiProperty()
   @IsString()
   albumId: string;
+
+  @ApiProperty()
+  @IsArray()
+  @ArrayMinSize(1)
+  filePaths: string[];
 }

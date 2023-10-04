@@ -40,7 +40,7 @@ export class PhotoService {
     }
 
     query.skip(skip).take(count);
-    console.log(query.getSql());
+
     return await query.getMany();
   }
 
