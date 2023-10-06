@@ -9,9 +9,11 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  Index,
 } from 'typeorm';
 
 @Entity()
+@Index('idx_accountId', ['accountId'])
 export class Album {
   @PrimaryGeneratedColumn('uuid')
   id: string;

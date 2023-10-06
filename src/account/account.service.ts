@@ -29,7 +29,7 @@ export class AccountService {
     try {
       await this.accountRepository.save(account);
     } catch (error) {
-      throw new ConflictException();
+      throw new ConflictException(error);
     }
 
     return account.id;

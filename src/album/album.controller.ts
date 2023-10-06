@@ -16,6 +16,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import {
   ApiBearerAuth,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -35,6 +36,7 @@ export class AlbumController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
+  @ApiQuery({ name: 'filter_account_id', required: false })
   findAll(
     @Query('skip') skip: number,
     @Query('count') count: number,

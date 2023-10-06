@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
+import { CreatePhotoDto } from 'src/photo/dto/create-photo.dto';
 
 @Injectable()
 export class AwsService {
@@ -7,27 +8,30 @@ export class AwsService {
 
   constructor() {
     this.s3 = new S3({
-      accessKeyId: 'AKIASJ7DBOZUC3JOQX5B',
-      secretAccessKey: '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',
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_RIGION,
     });
   }
 
   async generatePresignedUrls(
-    albumId: string,
-    filePaths: string[],
+    createPhotoDto: CreatePhotoDto,
   ): Promise<{ [key: string]: string }> {
-    const preSignedUrls = {};
+    const { albumId, fileInfos } = createPhotoDto;
 
-    console.log(process.env.AWS_EXPIRED);
-    for (const filePath of filePaths) {
+    const preSignedUrls = {};
+    for (const fileInfo of fileInfos) {
+      const [filename, filetype] = fileInfo.split('|');
+
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `${albumId}/${filePath}`,
+        Key: `${albumId}/${filename}`,
         Expires: parseInt(process.env.AWS_URL_EXPIRED),
+        ContentType: filetype,
       };
 
       const url = await this.generatePreSignedUrl(params);
-      preSignedUrls[filePath] = url;
+      preSignedUrls[filename] = url;
     }
 
     return preSignedUrls;

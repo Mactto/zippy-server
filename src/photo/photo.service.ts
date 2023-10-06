@@ -1,13 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { Repository } from 'typeorm';
 import { Photo } from './entities/photo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Album } from 'src/album/entities/album.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PhotoService {
   constructor(
+    private configService: ConfigService,
+
     @InjectRepository(Album)
     private albumRepository: Repository<Album>,
 
@@ -16,18 +23,29 @@ export class PhotoService {
   ) {}
 
   async create(createPhotoDto: CreatePhotoDto) {
-    const { albumId } = createPhotoDto;
+    const { albumId, fileInfos } = createPhotoDto;
 
     const album = await this.albumRepository.findOneBy({ id: albumId });
 
-    const photo = new Photo();
+    if (!album) {
+      throw new NotFoundException();
+    }
 
-    photo.upload_url = 'test';
-    photo.album = album;
+    const photos = fileInfos.map((fileInfo) => {
+      const [filename, filetype] = fileInfo.split('|');
 
-    await this.photoRepository.save(photo);
+      const photo = new Photo();
+      photo.filename = filename;
+      photo.album = album;
+      photo.imageType = filetype;
+      return photo;
+    });
 
-    return photo.id;
+    try {
+      await this.photoRepository.insert(photos);
+    } catch (error) {
+      throw new ConflictException('already uploaded photo exist in same album');
+    }
   }
 
   async findAll(filter_album_id: string | null, skip: number, count: number) {

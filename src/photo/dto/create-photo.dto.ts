@@ -9,5 +9,5 @@ export class CreatePhotoDto {
   @ApiProperty()
   @IsArray()
   @ArrayMinSize(1)
-  filePaths: string[];
+  fileInfos: string[];
 }

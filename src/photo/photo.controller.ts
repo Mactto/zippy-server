@@ -12,6 +12,7 @@ import { PhotoService } from './photo.service';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import {
   ApiBearerAuth,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -31,24 +32,34 @@ export class PhotoController {
   @UseGuards(JwtAuthGuard)
   @Post('bulk')
   async create(@Body() createPhotoDto: CreatePhotoDto) {
-    const { albumId, filePaths } = createPhotoDto;
+    const presignedUrls =
+      await this.awsService.generatePresignedUrls(createPhotoDto);
 
-    const presignedUrls = await this.awsService.generatePresignedUrls(
-      albumId,
-      filePaths,
-    );
+    await this.photoService.create(createPhotoDto);
 
     return { presignedUrls };
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(
-    @Query('filter_album_id') filter_album_id: string | null,
+  @ApiQuery({ name: 'filter_album_id', required: false })
+  async findAll(
     @Query('skip') skip: number,
     @Query('count') count: number,
+    @Query('filter_album_id') filter_album_id?: string,
   ) {
-    return this.photoService.findAll(filter_album_id, skip, count);
+    const photos = await this.photoService.findAll(
+      filter_album_id,
+      skip,
+      count,
+    );
+
+    const resulrPhotos = photos.map((photo) => ({
+      ...photo,
+      uploadUrl: photo.uploadUrl, // 이 줄을 추가합니다.
+    }));
+
+    return resulrPhotos;
   }
 
   @UseGuards(JwtAuthGuard)

@@ -33,7 +33,7 @@ export class AlbumService {
   async findAll(filter_account_id: string | null, skip: number, count: number) {
     const query = this.albumRepository.createQueryBuilder('album');
 
-    if (filter_account_id !== null) {
+    if (filter_account_id !== undefined) {
       query.where('album.account.id = :filter_account_id', {
         filter_account_id,
       });
