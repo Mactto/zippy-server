@@ -38,6 +38,6 @@ export class Photo {
   album: Album;
 
   get uploadUrl(): string {
-    return `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${this.albumId}/${this.filename}`;
+    return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${this.albumId}/${this.filename}`;
   }
 }

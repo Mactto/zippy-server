@@ -56,7 +56,7 @@ export class PhotoController {
 
     const resulrPhotos = photos.map((photo) => ({
       ...photo,
-      uploadUrl: photo.uploadUrl, // 이 줄을 추가합니다.
+      uploadUrl: photo.uploadUrl,
     }));
 
     return resulrPhotos;
