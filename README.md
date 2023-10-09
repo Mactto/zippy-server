@@ -1,7 +1,8 @@
 # Zippy Server Readme
 
 ### Demo
-![zippy_demo](https://github.com/Mactto/zippy-server/assets/64149514/a4eb9af4-2044-42c6-9c5e-37b9df847dd7)
+![zippy_demo](https://github.com/Mactto/zippy-server/assets/64149514/89a9537c-4074-4e14-8e48-5a88d800761d)
+
 
 ---
   
@@ -11,4 +12,4 @@
 ---
     
 ### ERD
-<img width="576" alt="zippy_erd" src="https://github.com/Mactto/zippy-server/assets/64149514/34edaee4-77ad-4d9c-984f-fddbca03eea0">
+<img width="576" alt="zippy_erd" src="https://github.com/Mactto/zippy-server/assets/64149514/c8415d7b-f994-42fa-86af-31c83026f801">
